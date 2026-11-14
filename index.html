@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10130f">
+  <title>Achievement Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/app.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark">A</span><span>ACHIEVEMENT<span class="muted"> ARCHIVE</span></span></a>
+      <div class="top-actions">
+        <span class="local-label"><i></i> PERSONAL TRACKER</span>
+        <button class="icon-btn" id="exportBtn" title="데이터 백업" aria-label="데이터 백업">↓</button>
+        <button class="icon-btn" id="importBtn" title="데이터 복원" aria-label="데이터 복원">↑</button>
+        <input type="file" id="importFile" accept="application/json" hidden>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div>
+          <p class="eyebrow">YOUR GAMING JOURNAL / 001</p>
+          <h1>Every achievement<br><span>has a story.</span></h1>
+          <p class="hero-copy">플레이한 게임과 도전과제 달성 현황을 한곳에 기록하세요.</p>
+        </div>
+        <button class="primary-btn" id="addGameBtn"><span>＋</span> 게임 추가</button>
+      </section>
+
+      <section class="overview">
+        <article class="stat-card stat-main">
+          <div class="stat-top"><span>OVERALL COMPLETION</span><span class="stat-symbol">◈</span></div>
+          <div class="stat-value"><strong id="overallPercent">0%</strong><span id="overallFraction">0 / 0 ACHIEVEMENTS</span></div>
+          <div class="progress-track"><div class="progress-fill" id="overallBar"></div></div>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>GAMES IN LIBRARY</span><span class="stat-symbol">▤</span></div>
+          <div class="small-stat" id="gameCount">0</div>
+          <p class="stat-note">등록된 게임</p>
+        </article>
+        <article class="stat-card">
+          <div class="stat-top"><span>UNLOCKED</span><span class="stat-symbol green">✦</span></div>
+          <div class="small-stat" id="unlockedCount">0</div>
+          <p class="stat-note">달성한 도전과제</p>
+        </article>
+      </section>
+
+      <section class="library-section">
+        <div class="section-heading">
+          <div><p class="eyebrow">COLLECTION</p><h2>My Library <span id="libraryCount">00</span></h2></div>
+          <div class="library-tools">
+            <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="게임 검색"></label>
+            <select id="sortSelect" aria-label="정렬"><option value="recent">최근 추가순</option><option value="name">이름순</option><option value="progress">달성률순</option></select>
+          </div>
+        </div>
+        <div class="filter-row">
+          <button class="filter-chip active" data-filter="all">전체</button>
+          <button class="filter-chip" data-filter="playing">플레이 중</button>
+          <button class="filter-chip" data-filter="completed">100% 달성</button>
+          <button class="filter-chip" data-filter="notstarted">시작 전</button>
+        </div>
+        <div id="gameGrid" class="game-grid"></div>
+        <div id="emptyState" class="empty-state">
+          <div class="empty-icon">＋</div><h3>아직 등록된 게임이 없습니다</h3>
+          <p>첫 번째 게임을 추가하고 나만의 도전과제 아카이브를 만들어 보세요.</p>
+          <button class="primary-btn" id="emptyAddBtn">게임 등록하기</button>
+        </div>
+      </section>
+    </main>
+    <footer><span>ACHIEVEMENT ARCHIVE</span><span>MADE FOR YOUR NEXT 100%</span></footer>
+  </div>
+
+  <dialog id="gameDialog" class="modal">
+    <form id="gameForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">NEW ENTRY</p><h2 id="gameDialogTitle">게임 추가</h2></div><button type="button" class="close-btn" data-close="gameDialog">×</button></div>
+      <input type="hidden" id="gameId">
+      <label>게임 이름<input id="gameName" maxlength="60" required placeholder="예: Clair Obscur: Expedition 33"></label>
+      <label>플랫폼<select id="gamePlatform"><option>PC</option><option>PlayStation</option><option>Nintendo Switch</option><option>Xbox</option><option>Mobile</option><option>기타</option></select></label>
+      <label>게임 이미지 URL <span class="optional">선택 사항</span><input id="gameImage" type="url" placeholder="https://..."></label>
+      <label>메모 <span class="optional">선택 사항</span><textarea id="gameNote" rows="2" maxlength="180" placeholder="게임에 대한 짧은 메모"></textarea></label>
+      <div class="modal-actions"><button type="button" class="secondary-btn" data-close="gameDialog">취소</button><button class="primary-btn" type="submit">저장하기</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detailDialog" class="modal detail-modal">
+    <div class="modal-head"><div><p class="eyebrow">GAME DETAILS</p><h2 id="detailTitle">게임</h2><p class="detail-subtitle" id="detailSubtitle"></p></div><button type="button" class="close-btn" data-close="detailDialog">×</button></div>
+    <div class="detail-progress"><div><strong id="detailPercent">0%</strong><span id="detailFraction">0 / 0 달성</span></div><div class="progress-track"><div class="progress-fill" id="detailBar"></div></div></div>
+    <div class="achievement-toolbar"><h3>도전과제 <span id="achievementCount">0</span></h3><button class="secondary-btn compact" id="addAchievementBtn">＋ 추가</button></div>
+    <div id="achievementList" class="achievement-list"></div>
+    <div class="detail-footer"><button class="danger-text" id="deleteGameBtn">이 게임 삭제</button><button class="secondary-btn" id="editGameBtn">게임 정보 수정</button></div>
+  </dialog>
+
+  <dialog id="achievementDialog" class="modal">
+    <form id="achievementForm" method="dialog">
+      <div class="modal-head"><div><p class="eyebrow">ACHIEVEMENT ENTRY</p><h2 id="achievementDialogTitle">도전과제 추가</h2></div><button type="button" class="close-btn" data-close="achievementDialog">×</button></div>
+      <input type="hidden" id="achievementId">
+      <label>도전과제 이름<input id="achievementName" maxlength="100" required placeholder="예: 첫 번째 보스 처치"></label>
+      <label>설명 <span class="optional">선택 사항</span><textarea id="achievementDescription" rows="3" maxlength="240" placeholder="달성 조건이나 메모"></textarea></label>
+      <div class="modal-actions"><button type="button" class="secondary-btn" data-close="achievementDialog">취소</button><button class="primary-btn" type="submit">저장하기</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+</body>
+</html>

@@ -97,7 +97,12 @@ async function readGames(env) {
     `data/games.json?ref=${encodeURIComponent(env.GITHUB_BRANCH || "main")}`
   );
   if (response.status === 404) return [];
-  if (!response.ok) throw new Error(`게임 데이터 조회 실패: ${response.status}`);
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(
+      `게임 데이터 조회 실패: ${response.status} - ${detail.slice(0, 500)}`
+    );
+  }
 
   const file = await response.json();
   const binary = atob(file.content.replace(/\n/g, ""));

@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/cloud-config.js"></script>
   <script src="js/app.js" defer></script>
 </head>
 <body>
@@ -16,7 +17,7 @@
     <header class="topbar">
       <a class="brand" href="#"><span class="brand-mark">A</span><span>ACHIEVEMENT<span class="muted"> ARCHIVE</span></span></a>
       <div class="top-actions">
-        <span class="local-label"><i></i> PERSONAL TRACKER</span>
+        <span class="local-label" id="syncStatus"><i></i> CLOUD SYNC 준비 중</span>
         <button class="icon-btn" id="exportBtn" title="데이터 백업" aria-label="데이터 백업">↓</button>
         <button class="icon-btn" id="importBtn" title="데이터 복원" aria-label="데이터 복원">↑</button>
         <input type="file" id="importFile" accept="application/json" hidden>
@@ -82,7 +83,7 @@
       <input type="hidden" id="gameId">
       <label>게임 이름<input id="gameName" maxlength="60" required placeholder="예: Clair Obscur: Expedition 33"></label>
       <label>플랫폼<select id="gamePlatform"><option>PC</option><option>PlayStation</option><option>Nintendo Switch</option><option>Xbox</option><option>Mobile</option><option>기타</option></select></label>
-      <label>게임 이미지 URL <span class="optional">선택 사항</span><input id="gameImage" type="url" placeholder="https://..."></label>
+      <label>게임 이미지 파일 <span class="optional">선택 사항 · JPG / PNG / WEBP</span><input id="gameImageFile" type="file" accept="image/png,image/jpeg,image/webp"><span class="optional" id="imageHelp">선택한 이미지는 자동으로 축소되어 GitHub 저장소에 업로드됩니다.</span><img id="imagePreview" class="image-preview" alt="이미지 미리보기" hidden></label><label>또는 이미지 URL <span class="optional">선택 사항</span><input id="gameImage" type="url" placeholder="https://..."></label>
       <label>메모 <span class="optional">선택 사항</span><textarea id="gameNote" rows="2" maxlength="180" placeholder="게임에 대한 짧은 메모"></textarea></label>
       <div class="modal-actions"><button type="button" class="secondary-btn" data-close="gameDialog">취소</button><button class="primary-btn" type="submit">저장하기</button></div>
     </form>

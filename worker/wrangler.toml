@@ -1,0 +1,10 @@
+name = "achievement-archive-api"
+main = "index.js"
+compatibility_date = "2026-11-15"
+
+[vars]
+GITHUB_OWNER = "YOUR_GITHUB_USERNAME"
+GITHUB_REPO = "achievement-archive"
+GITHUB_BRANCH = "main"
+# Set this to the exact GitHub Pages origin, without the repository path.
+ALLOWED_ORIGINS = "https://YOUR_GITHUB_USERNAME.github.io"
